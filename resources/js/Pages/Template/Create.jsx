@@ -6,7 +6,6 @@ import axios from 'axios';
 import FileInputWithPreview from '@/Components/FileInputWithPreview';
 import { Box, Stack, TextField, Typography } from '@mui/material';
 import CustomSelectCategoryBox from '@/Components/CustomSelectCategoryBox';
-import { useEffect } from 'react';
 
 export default function Create({ auth, type, title, headerOptions, categories, apiToken }) {
     const [selectedCategory, setSelectedCategory] = React.useState({ name: "", id: "" });
@@ -67,8 +66,6 @@ export default function Create({ auth, type, title, headerOptions, categories, a
     const handleAddFileInput = () => {
         setFileInputs([...fileInputs, fileInputs.length]);
     };
-
-    console.log(info)
 
     const handleSubmit = useCallback(() => {
         const formData = new FormData();
