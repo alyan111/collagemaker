@@ -1,154 +1,173 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { Stage, Layer, Star, Text } from 'react-konva';
-import React, { useEffect } from 'react';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
-import { useCallback, useState } from 'react'
-import { TargetBox } from './TargetBox'
-import KonvaCustomImage from '@/Components/KonvaCustomImage';
+import React, { useCallback, useState } from 'react';
 import ActionBar from '@/Components/ActionBar';
 import axios from 'axios';
-import Sidebar from '@/Components/Sidebar';
+import FileInputWithPreview from '@/Components/FileInputWithPreview';
+import { Box, Stack, TextField, Typography } from '@mui/material';
+import CustomSelectCategoryBox from '@/Components/CustomSelectCategoryBox';
+import { useEffect } from 'react';
 
-const style = {
-    border: '3px solid gray',
-    borderRadius: "15px",
-    height: '10rem',
-    width: '100%',
-    padding: '2rem',
-    textAlign: 'center',
-    margin: "30px 0px",
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-}
+export default function Create({ auth, type, title, headerOptions, categories, apiToken }) {
+    const [selectedCategory, setSelectedCategory] = React.useState({ name: "", id: "" });
+    const changeCategory = (e, i) => {
+        i ? setSelectedCategory({ name: i.name, id: i.id }) : "";
+    }
+    React.useEffect(() => {
+        localStorage.setItem('apiToken', apiToken);
+    }, [])
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [fileInputs, setFileInputs] = useState([]); // Start with one file input
+    const [info, setInfo] = useState({
+        'title': "",
+        'tags': "",
+        'height': "",
+        'width': "",
+    })
 
-export default function Create({ auth, type, title, headerOptions }) {
+    const handleInputChange = (type, value) => {
+        setInfo((prevInfo) => ({
+            ...prevInfo,
+            [type]: value,
+        }));
+    }
 
-    const handleDragStart = (e) => {
-        const id = e.target.id();
-        setDroppedFiles(
-            droppedFiles.map((img) => {
-                return { ...img, isDragging: img.id === id };
-            })
-        );
-    };
-
-    const handleDragEnd = (e) => {
-        const id = e.target.id();
-        setDroppedFiles(
-            droppedFiles.map((img) => {
-                let x = img.x, y = img.y;
-                var newImgObj = { ...img, x, y, isDragging: false };
-                if (id === img.id) {
-                    newImgObj['x'] = e.target.x();
-                    newImgObj['y'] = e.target.y();
-                };
-                return newImgObj;
-            })
-        );
-    };
-
-    const [droppedFiles, setDroppedFiles] = useState([])
-    const handleFileDrop = useCallback((item) => {
-        if (item) {
-            const files = item.files;
-            let images = [];
-            var i = droppedFiles.length !== 0 ? droppedFiles.length : 0;
-            files.map(img => {
-                const id = String(Math.random()).slice(-5) + new Date().getTime() + "";
-                i = i + 1;
-                images.push({
-                    index: i,
-                    order: i,
-                    id,
-                    src: URL.createObjectURL(img),
-                    image: img,
-                    x: Math.random() * 1216,
-                    y: Math.random() * 500,
-                    rotation: 0,
-                    isDragging: false,
-                });
-            });
-            setDroppedFiles(prevFiles => [...images, ...prevFiles]);
+    const handleFileChange = (index, event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const newSelectedFiles = [...selectedFiles];
+            newSelectedFiles[index] = {
+                id: file.name,  // Or any other ID you have
+                src: URL.createObjectURL(file),
+                x: 0,           // Placeholder for x coordinate
+                y: 0,           // Placeholder for y coordinate
+                rotation: 0,    // Placeholder for rotation
+                image: file,
+                isFrame: false  // Default to false
+            };
+            setSelectedFiles(newSelectedFiles);
         }
-    }, [droppedFiles]);
-
-    // console.log("outside : " + droppedFiles.length);
-
-    const updateOrder = (dragIndex, hoverIndex, id) => {
-        const draggedItem = droppedFiles[dragIndex];
-        const newItems = [...droppedFiles];
-        newItems.splice(dragIndex, 1);
-        newItems.splice(hoverIndex, 0, draggedItem);
-        console.log(newItems);
-        setDroppedFiles(newItems)
     };
+
+    const handleCheckboxChange = (index, event) => {
+        const newSelectedFiles = [...selectedFiles];
+        if (newSelectedFiles[index]) {
+            newSelectedFiles[index].isFrame = event.target.checked;
+            setSelectedFiles(newSelectedFiles);
+        }
+    };
+
+    const handleRemoveFileInput = (index) => {
+        const newFileInputs = fileInputs.filter((_, i) => i !== index);
+        const newSelectedFiles = selectedFiles.filter((_, i) => i !== index);
+        setFileInputs(newFileInputs);
+        setSelectedFiles(newSelectedFiles);
+    };
+
+    const handleAddFileInput = () => {
+        setFileInputs([...fileInputs, fileInputs.length]);
+    };
+
+    console.log(info)
 
     const handleSubmit = useCallback(() => {
         const formData = new FormData();
-        droppedFiles.forEach((item, index) => {
+        selectedFiles.forEach((item, index) => {
             formData.append(`items[${index}][id]`, item.id);
             formData.append(`items[${index}][src]`, item.src);
             formData.append(`items[${index}][x]`, item.x);
             formData.append(`items[${index}][y]`, item.y);
             formData.append(`items[${index}][rotation]`, item.rotation);
             formData.append(`items[${index}][image]`, item.image);
-
-            formData.append('user_id', auth.user.id); // // //=
+            formData.append(`items[${index}][isFrame]`, item.isFrame ? '1' : '0');
         });
-
+        formData.append('user_id', auth.user.id);
+        formData.append('title', info['title']);
+        formData.append('tags', info['tags']);
+        formData.append('height', info['height']);
+        formData.append('width', info['width']);
+        formData.append('source', "panel");
+        formData.append('category_id', selectedCategory['id']);
+        const apiToken = localStorage.getItem('apiToken');
         axios.post(route('save.template'), formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${apiToken}`,
             }
         }).then(response => {
-            console.log(response.data);
-        })
-            .catch(error => {
-                console.error('Error : ', error);
-            });
-
-    }, [droppedFiles]);
+            // console.log(response.data);
+            window.location.href = route("view.all.templates");
+        }).catch(error => {
+            // console.error('Error : ', error);
+        });
+    }, [selectedFiles]);
 
     const actions = {
         "Create": function () {
             handleSubmit();
+        },
+        "Add Image": function () {
+            handleAddFileInput();
         }
-    }
+    };
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create Template</h2>}
-            actionBar={<ActionBar actions={actions} headerOptions={headerOptions} />}
+            actionBar={<ActionBar actions={actions} headerOptions={headerOptions} >
+                <CustomSelectCategoryBox categories={categories} changeCategory={changeCategory} />
+            </ActionBar>}
         >
             <Head title="Dashboard" />
-
-            <div className="py-12" >
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8" style={{ position: "relative" }}>
-                    <DndProvider backend={HTML5Backend}>
-                        <TargetBox onDrop={handleFileDrop} style={style} />
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <Stage width={1216} height={500} style={{ boxShadow: "rgba(149, 157, 165, 0.1) 0px 8px 24px" }}>
-                                <Layer>
-                                    {
-                                        droppedFiles
-                                            .map((image, i) => (
-                                                <KonvaCustomImage id={image.index} key={i} image={image} onDragStart={handleDragStart}
-                                                    onDragEnd={handleDragEnd} />
-                                            ))
-                                    }
-                                </Layer>
-                            </Stage>
-                        </div>
-                    </DndProvider>
-                    <Sidebar images={droppedFiles} reorder={updateOrder} />
+            <div className="square-pattern-bg">
+                <div className="py-12" style={{ width: "100%" }}>
+                    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8" style={{ position: "relative", width: "100%" }}>
+                        <Stack spacing={5} direction={'row'} justifyContent={"center"} sx={{
+                            padding: "30px 0px",
+                            backgroundColor: "white",
+                            width: "100%"
+                        }}>
+                            <Stack spacing={1}>
+                                <Typography variant="p" component="p">Enter title for template</Typography>
+                                <TextField onChange={(e) => { handleInputChange("title", e.target.value) }} value={info['title']} sx={{ width: "200px" }} id="outlined-basic" label="Title" variant="outlined" />
+                            </Stack>
+                            <Stack spacing={1}>
+                                <Typography variant="p" component="p">Enter tags for template</Typography>
+                                <TextField onChange={(e) => { handleInputChange("tags", e.target.value) }} value={info['tags']} sx={{ width: "200px" }} id="outlined-basic" label="Tags" variant="outlined" />
+                            </Stack>
+                            <Stack spacing={1}>
+                                <Typography variant="p" component="p">Enter width for template</Typography>
+                                <TextField onChange={(e) => { handleInputChange("width", e.target.value) }} value={info['width']} sx={{ width: "200px" }} id="outlined-basic" label="Width" variant="outlined" />
+                            </Stack>
+                            <Stack spacing={1}>
+                                <Typography variant="p" component="p">Enter height for template</Typography>
+                                <TextField onChange={(e) => { handleInputChange("height", e.target.value) }} value={info['height']} sx={{ width: "200px" }} id="outlined-basic" label="Height" variant="outlined" />
+                            </Stack>
+                        </Stack>
+                        {fileInputs.length == 0 && <Box sx={{
+                            width: "100%", height: "30vh", display: "flex", justifyContent: "center", alignItems: "center"
+                        }}>
+                            <Typography variant="h5" component="h2" color={"#444"}>
+                                Click "Add Image" button to add files
+                            </Typography>
+                        </Box>}
+                        <Stack direction={'row'} flexWrap={'wrap'} justifyContent={'center'}>
+                            {fileInputs.map((input, index) => (
+                                <FileInputWithPreview
+                                    key={index}
+                                    index={index}
+                                    handleFileChange={handleFileChange}
+                                    handleRemoveFileInput={handleRemoveFileInput}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                    selectedFile={selectedFiles[index]}
+                                    type={index > 1 ? "image" : index == 0 ? "thumbnail" : "shade"}
+                                />
+                            ))}
+                        </Stack>
+                    </div>
                 </div>
             </div>
-        </ AuthenticatedLayout >
+        </AuthenticatedLayout>
     );
 }

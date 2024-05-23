@@ -18,11 +18,21 @@ class TemplateImage extends Model
         "rotation",
         "scale",
         "image",
+        "isFrame",
+        "coordinates",
         "template_id",
+    ];
+
+    protected $casts = [
+        'coordinates' => 'array',
     ];
 
     public function template()
     {
         return $this->belongsTo(Template::class);
+    }
+    public function getRouteKeyName()
+    {
+        return 'uni'; // Specify the column you want to use for route model binding
     }
 }

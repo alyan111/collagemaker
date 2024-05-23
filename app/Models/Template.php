@@ -16,8 +16,12 @@ class Template extends Model
     protected $fillable = [
         'uni',
         'title',
+        'white_image',
+        'width',
+        'height',
         'tags',
         'category_id',
+        'thumbnail',
         'user_id',
     ];
 

@@ -5,7 +5,7 @@ function list(files) {
   return files.map((file) => <li key={file.name}>{label(file)}</li>)
 }
 export const FileList = ({ files }) => {
-  console.log(files);
+  // console.log(files);
   if (files.length === 0) {
     return <div>Nothing to display</div>
   }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SingleImageDataController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,9 +29,13 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/templates', [SingleImageDataController::class, 'create'])->name('single.image.create.view');
+    Route::get('/templates', [TemplateController::class, 'index'])->name('view.all.templates');
+
+    Route::get('/templates/new', [TemplateController::class, 'create'])->name('create.new.template.view');
 
     Route::get('/assets/create', [SingleImageDataController::class, 'assetsCreate'])->name('assets.create.view');
+
+    Route::get('/assets', [SingleImageDataController::class, 'index'])->name('view.all.assets');
 
     Route::get('/categories', [CategoryController::class, 'view'])->name('categories.view');
 

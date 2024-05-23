@@ -33,7 +33,7 @@ export const TargetBox = (props) => {
   )
   const isActive = canDrop && isOver
   return (
-    <div ref={drop} style={style}>
+    <div ref={drop} style={style} className={isActive ? 'skeleton-animation' : ''}>
       {isActive ? 'Release to drop' : 'Drag & Drop file here'}
     </div>
   )

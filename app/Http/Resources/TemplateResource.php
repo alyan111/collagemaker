@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class TemplateResource extends JsonResource
 {
@@ -17,8 +18,13 @@ class TemplateResource extends JsonResource
         return [
             'uni' => $this->uni,
             'title' => $this->title,
+            'height' => $this->height,
+            'width' => $this->width,
+            'thumbnail' => asset(Storage::url($this->thumbnail)),
+            'whiteImage' => asset(Storage::url($this->white_image)),
             // 'images' => TemplateImageResource::collection($this->whenLoaded('images')),
             'images' => TemplateImageResource::collection($this->images),
         ];
     }
 }
+

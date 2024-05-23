@@ -34,12 +34,6 @@
     max-width: 50px;
 }
 
-
-
-
-
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -185,4 +179,26 @@ input[type="text"]:focus {
 }
 .analyics-count-card:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+@keyframes skeleton {
+    0% {
+        /* background-color: #e6ebfa; */
+        /* border-color: #7b849c; */
+        opacity: 1;
+    }
+    50% {
+        /* background-color: #e6ebfa6b; */
+        /* border-color: #7b849c6b; */
+        opacity: 0.4;
+    }
+    100% {
+        /* background-color: #e6ebfa; */
+        /* border-color: #7b849c; */
+        opacity: 1;
+    }
+}
+
+.skeleton-animation {
+    animation: skeleton 0.75s infinite;
 }

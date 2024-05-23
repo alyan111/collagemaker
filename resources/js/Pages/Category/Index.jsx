@@ -175,7 +175,7 @@ export default function Index({ auth, data, type, categories, title, headerOptio
 
         <List
           className='categoriey-items'
-          sx={{ width: '100%', padding: "20px 0px", padding: '30px' }}
+          sx={{ width: '100%', padding: '30px' }}
         >
           {
             data.map((_, index) => <CategoryItem key={_['id']} data={_} actionButtonClick={actionButtonClick} />)

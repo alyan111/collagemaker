@@ -24,6 +24,7 @@ class SingleImageDataResource extends JsonResource
         return [
             'image' => $image,
             'thumbnail' => $thumbnail,
+            'type' => $this->type,
         ];
     }
 }

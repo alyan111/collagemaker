@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryCollection;
+use App\Http\Resources\SingleImageDataCollection;
 use App\Http\Resources\SingleImageDataResource;
 use App\Http\Resources\SizeResource;
 use App\Models\Category;
@@ -11,9 +12,11 @@ use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class SingleImageDataController extends Controller
 {
+
     function assetsCreate(Request $request)
     {
         $categories = (new CategoryCollection(Category::where('show', 1)->orderByDesc('id')->get()))->toArray($request);
@@ -24,7 +27,7 @@ class SingleImageDataController extends Controller
                 [
                     "type" => "action",
                     "title" => "Create",
-                    "href" => "single.image.create.view",
+                    "href" => "create.new.template.view",
                 ],
             ],
         ]);
@@ -58,27 +61,28 @@ class SingleImageDataController extends Controller
         ]);
     }
 
-    function create(Request $request)
+
+    function index(Request $request)
     {
-        return Inertia::render('Template/Create', [
-            'title' => "Create Asset",
+        // if ($type === "all")
+        //     return SingleImageDataResource::collection(SingleImageData::all());
+        // if ($type === "sizes")
+        //     return SizeResource::collection(Size::all());
+        // else
+        //     return SingleImageDataResource::collection(SingleImageData::where("type", $type)->get());
+
+        $assets = SingleImageDataResource::collection(SingleImageData::all())->toArray($request);
+        return Inertia::render('Asset/Index', [
+            'title' => "Manage Assets",
+            'assets' => $assets,
             'headerOptions' => [
                 [
-                    "type" => "action",
+                    "type" => "link",
                     "title" => "Create",
-                    "href" => "single.image.create.view",
+                    "href" => "assets.create.view",
                 ],
             ],
         ]);
-    }
-    function index(Request $request, $type)
-    {
-        if ($type === "all")
-            return SingleImageDataResource::collection(SingleImageData::all());
-        if ($type === "sizes")
-            return SizeResource::collection(Size::all());
-        else
-            return SingleImageDataResource::collection(SingleImageData::where("type", $type)->get());
     }
 
     function downloadTest(Request $request)
