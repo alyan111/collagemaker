@@ -26,7 +26,7 @@ class TemplateImageResource extends JsonResource
             'rotation' => $this->rotation,
             'scale' => $this->scale,
             'isFrame' => $this->isFrame,
-            $response['coordinates'] = $this->coordinates ? $this->coordinates : ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"];
+            $response['coordinates'] = $this->coordinates ? $this->coordinates : ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"],
         ];
         return $response;
     }
