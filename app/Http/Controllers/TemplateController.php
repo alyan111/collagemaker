@@ -93,7 +93,6 @@ class TemplateController extends Controller
             foreach ($request->items as $index => $item) {
                 if ($index == 0) {
                     $name = str_replace(".", "", str_replace(" ", "", $templateUni . microtime() . random_int(1001, 2000))) . '.' . $item['image']->extension();
-                    return $name;
                     $path = Storage::disk("public")->putFileAs("/templates", $item['image'], $name);
                     $templateData['thumbnail'] = $path;
                     continue;
