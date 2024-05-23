@@ -92,13 +92,13 @@ class TemplateController extends Controller
             ];
             foreach ($request->items as $index => $item) {
                 if ($index == 0) {
-                    $name = $templateUni . microtime() . random_int(1001, 2000) . '.' . $item['image']->extension();
+                    $name = str_replace(" ", "", $templateUni . microtime() . random_int(1001, 2000) . '.' . $item['image']->extension());
                     $path = Storage::disk("public")->putFileAs("/templates", $item['image'], $name);
                     $templateData['thumbnail'] = $path;
                     continue;
                 }
                 if ($index == 1) {
-                    $name = $templateUni . microtime() . random_int(1, 1000) . '.' . $item['image']->extension();
+                    $name = str_replace(" ", "", $templateUni . microtime() . random_int(1, 1000) . '.' . $item['image']->extension());
                     $path = Storage::disk("public")->putFileAs("/templates", $item['image'], $name);
                     $templateData['white_image'] = $path;
                     $template = Template::create($templateData);
