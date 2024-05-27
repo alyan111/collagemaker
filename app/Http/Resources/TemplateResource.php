@@ -18,6 +18,7 @@ class TemplateResource extends JsonResource
         return [
             'uni' => $this->uni,
             'title' => $this->title,
+            'category' => $this->category->name,
             'height' => $this->height,
             'width' => $this->width,
             'thumbnail' => asset(Storage::url($this->thumbnail)),
