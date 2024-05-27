@@ -61,6 +61,16 @@ class SingleImageDataController extends Controller
         ]);
     }
 
+    function getSingleImageContent(Request $request,  $type)
+    {
+        if ($type === "all")
+            return SingleImageDataResource::collection(SingleImageData::all());
+        if ($type === "sizes")
+            return SizeResource::collection(Size::all());
+        else
+            return SingleImageDataResource::collection(SingleImageData::where("type", $type)->get());
+
+    }
 
     function index(Request $request)
     {

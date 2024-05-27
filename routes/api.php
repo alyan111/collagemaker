@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/assets/{type}', [SingleImageDataController::class, 'index'])->name("serve.assets");
+Route::get('/assets/{type}', [SingleImageDataController::class, 'getSingleImageContent'])->name("serve.assets");
 
 Route::post('/save', [SingleImageDataController::class, 'testSave'])->name("test.save");
 
