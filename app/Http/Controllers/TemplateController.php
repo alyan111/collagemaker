@@ -55,9 +55,14 @@ class TemplateController extends Controller
     }
     function readAll(Request $request)
     {
-        $templates = TemplateResource::collection(Template::all())->toArray($request);
-        // $template = TemplateResource::collection(Template::where("uni", $uni)->get());
-        return response()->json(['templates' => $templates]);
+        $categoriezedTemplates = Template::all()->groupBy('category_id');
+        $response = [];
+        foreach ($categoriezedTemplates as $categoryName => $templates) {
+            $name = Category::where("uni", $categoryName)->first()['name'];
+            $response[$name] = TemplateResource::collection($templates)->toArray($request);
+        }
+        // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
+        return response()->json(['templates' => $response]);
     }
     function read(Request $request, $uni)
     {
