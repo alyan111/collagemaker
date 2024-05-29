@@ -55,11 +55,12 @@ class TemplateController extends Controller
     }
     function readAll(Request $request)
     {
-        $categoriezedTemplates = Template::all()->groupBy('category_id');
         $response = [];
-        foreach ($categoriezedTemplates as $categoryName => $templates) {
-            $name = Category::where("uni", $categoryName)->first()['name'];
-            $response[] = ['name' => $name, 'templates' => TemplateResource::collection($templates)->toArray($request)];
+        foreach (Template::all()->groupBy('category_id') as $categoryName => $templates) {
+            $response[] = [
+                'name' => Category::where("uni", $categoryName)->first()['name'],
+                'templates' => TemplateResource::collection($templates)->toArray($request)
+            ];
 
         }
         // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
