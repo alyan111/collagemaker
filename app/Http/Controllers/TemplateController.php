@@ -59,7 +59,7 @@ class TemplateController extends Controller
         $response = [];
         foreach ($categoriezedTemplates as $categoryName => $templates) {
             $name = Category::where("uni", $categoryName)->first()['name'];
-            $response[$name] = TemplateResource::collection($templates)->toArray($request);
+            $response[] = ['name' => $name, 'templates' => $templates];
         }
         // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
         return response()->json(['templates' => $response]);
