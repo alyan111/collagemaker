@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TemplateImageResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         $response = [
@@ -20,6 +15,7 @@ class TemplateImageResource extends JsonResource
             // 'image' => asset('storage/templates/' . $this->image),
             'image' => asset(Storage::url($this->image)),
             'width' => $this->width,
+            'image_text' => $this->imageText,
             'height' => $this->height,
             'x_axis' => $this->x_axis,
             'y_axis' => $this->y_axis,

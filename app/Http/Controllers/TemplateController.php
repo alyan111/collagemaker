@@ -55,22 +55,22 @@ class TemplateController extends Controller
     }
     function readAll(Request $request)
     {
+        // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
         $response = [];
-        foreach (Template::all()->groupBy('category_id') as $categoryName => $templates) {
+        foreach (Template::all()->groupBy('category_id') as $categoryUni => $templates) {
             $response[] = [
-                'name' => Category::where("uni", $categoryName)->first()['name'],
+                'name' => Category::where("uni", $categoryUni)->first()['name'],
                 'templates' => TemplateResource::collection($templates)->toArray($request)
             ];
 
         }
-        // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
         return response()->json(['templates' => $response]);
     }
     function read(Request $request, $uni)
     {
-        return TemplateResource::collection(Template::where("uni", $uni)->get())->toArray($request);
+        // return TemplateResource::collection(Template::where("uni", $uni)->get())->toArray($request);
         $template = TemplateResource::collection(Template::where("uni", $uni)->get());
-        return response()->json(['template' => $template]);
+        return response()->json(['response' => $template]);
     }
     function updateImage(Request $request, $uni)
     {
@@ -78,8 +78,9 @@ class TemplateController extends Controller
         $templateImage->x_axis = $request->x_axis;
         $templateImage->y_axis = $request->y_axis;
         $templateImage->coordinates = $request->coordinates;
+        $templateImage->imageText = $request->imageText;
         $templateImage->save();
-        return response()->json($templateImage);
+        return response()->json(['message' => "Updated"]);
     }
 
     function store(Request $request)

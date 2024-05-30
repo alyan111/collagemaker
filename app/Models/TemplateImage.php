@@ -20,6 +20,7 @@ class TemplateImage extends Model
         "image",
         "isFrame",
         "coordinates",
+        "imageText",
         "template_id",
     ];
 
