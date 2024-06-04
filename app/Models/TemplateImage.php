@@ -19,7 +19,6 @@ class TemplateImage extends Model
         "scale",
         "image",
         "isFrame",
-        "isText",
         "coordinates",
         "imageText",
         "template_id",

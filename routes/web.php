@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'view'])->name('categories.view');
 
+
 });
 
 require __DIR__ . '/auth.php';

@@ -1,15 +1,11 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
-import TextInput from './TextInput';
 
 export default function FileInputWithPreview({ index, handleFileChange, handleCheckboxChange, handleRemoveFileInput, selectedFile, type }) {
-
-  // console.log(selectedFile.src);
-
   let showText = true;
   try {
     showText = selectedFile.src && false;
@@ -26,62 +22,27 @@ export default function FileInputWithPreview({ index, handleFileChange, handleCh
 
         // border: "2px solid black",
       }}>
-
       <Box sx={{
         position: "absolute",
-        top: "10px", left: "10px",
-
+        bottom: "0px", left: "0px",
+        width: "100%",
+        backgroundColor: "lightblue"
       }}>
-        <Stack sx={{
-          backgroundColor: "rgba(0,0,0,0.6)",
-          color: "#ddd",
-          padding: "5px 10px", margin: "5px", borderRadius: "5px"
-        }}>
-          {selectedFile.src && <Box>
-            <input
-              type="checkbox"
-              id={`isFrame-${index}`}
-              checked={selectedFile.isFrame}
-              onChange={(event) => handleCheckboxChange(index, event, "frame")}
-            />
-            <label htmlFor={`isFrame-${index}`} className="ml-2">Frame</label>
-          </Box>}
-          <Box>
-            <input
-              type="checkbox"
-              id={`isText-${index}`}
-              checked={selectedFile.isText}
-              onChange={(event) => handleCheckboxChange(index, event, "text")}
-            />
-            <label htmlFor={`isText-${index}`} className="ml-2">Text</label>
-          </Box>
-        </Stack>
+        <input
+          type="file"
+          onChange={(event) => handleFileChange(index, event)}
+        />
       </Box>
       {
-        !selectedFile.isText && <Box sx={{
-          position: "absolute",
-          bottom: "0px", left: "0px",
-          width: "100%",
-          backgroundColor: "lightblue"
+        showText && <Box sx={{
+          width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"
         }}>
-          <input
-            type="file"
-            onChange={(event) => handleFileChange(index, event, false)}
-          />
+          <Typography variant="h5" component="h2" color={"#444"}>
+            {"Select " + type}
+          </Typography>
         </Box>
       }
-      <Box sx={{
-        width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"
-      }}>
-        {
-
-          // (selectedFile.isText || selectedFile.src == null) && (selectedFile.isText ? <TextField id="outlined-basic" label="Enter text here" variant="outlined"
-          //   onChange={(event) => handleFileChange(index, event, true)} /> : <Typography variant="h5" component="h2" color={"#444"}>{"Select " + type + " | " + selectedFile.isText}</Typography>)
-
-          (selectedFile.isText || selectedFile.src == null) && (selectedFile.isText ? <Typography variant="h5" component="h2" color={"#444"}>Display text field</Typography> : <Typography variant="h5" component="h2" color={"#444"}>Display image message</Typography>)
-        }
-      </Box>
-      {!selectedFile.isText && (
+      {selectedFile && (
         <div className="mt-2">
           {
             selectedFile.src && <Box sx={{
@@ -94,6 +55,20 @@ export default function FileInputWithPreview({ index, handleFileChange, handleCh
               />
             </Box>
           }
+
+          <Box sx={{
+            position: "absolute",
+            top: "10px", left: "10px",
+
+          }}>
+            <input
+              type="checkbox"
+              id={`isFrame-${index}`}
+              checked={selectedFile.isFrame}
+              onChange={(event) => handleCheckboxChange(index, event)}
+            />
+            <label htmlFor={`isFrame-${index}`} className="ml-2">Frame</label>
+          </Box>
         </div>
       )}
       <Box sx={{
