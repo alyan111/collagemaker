@@ -16,7 +16,6 @@ class TemplateResource extends JsonResource
     public function toArray(Request $request): array
     {
         $templateImages = TemplateImageResource::collection($this->images);
-        $templateImages[random_int(1, 2)]['isTop'] = true;
         return [
             'uni' => $this->uni,
             'title' => $this->title,
