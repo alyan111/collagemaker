@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('template_images', function (Blueprint $table) {
-            $table->string("imageText", 512)->default("temp");
+            $table->text("imageText")->default("temp");
         });
     }
 
