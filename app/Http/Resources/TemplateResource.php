@@ -15,16 +15,18 @@ class TemplateResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $templateImages = TemplateImageResource::collection($this->images);
+        $templateImages[random_int(1, 2)]['isTop'] = true;
         return [
             'uni' => $this->uni,
             'title' => $this->title,
-            'category' => $this->category->name,
+            'category' => isset($this->category->name) ? $this->category->name : null,
             'height' => $this->height,
             'width' => $this->width,
             'thumbnail' => asset(Storage::url($this->thumbnail)),
             'whiteImage' => asset(Storage::url($this->white_image)),
             // 'images' => TemplateImageResource::collection($this->whenLoaded('images')),
-            'images' => TemplateImageResource::collection($this->images),
+            'images' => $templateImages,
         ];
     }
 }

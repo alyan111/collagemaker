@@ -15,12 +15,34 @@ use Inertia\Inertia;
 
 class TemplateController extends Controller
 {
+    function delete(Request $request, $uni)
+    {
+        $template = Template::where("uni", $uni)->first();
+        $deletedImages = [];
+        if (Storage::disk('public')->exists($template['thumbnail']))
+            $deletedImages[] = $template['thumbnail']; //Storage::disk('public')->delete($template['thumbnail']);
+        if (Storage::disk('public')->exists($template['white_image']))
+            $deletedImages[] = $template['white_image']; //Storage::disk('public')->delete($template['white_image']);
+        $template->delete();
+
+        $templateImages = TemplateImage::where("uni", $uni)->get();
+        foreach ($templateImages as $key => $img) {
+            $filename = $img['image'];
+            if (Storage::disk('public')->exists($filename))
+                $deletedImages[] = $filename; //Storage::disk('public')->delete($filename);
+            $img->delete();
+        }
+        return response()->json(["message" => $deletedImages]);
+    }
     function index(Request $request)
     {
+        $user = Auth::user();
+        $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
         $templates = TemplateResource::collection(Template::orderBy('id', 'desc')->get())->toArray($request);
         return Inertia::render('Template/Index', [
             'title' => "Manage Templates",
             'templates' => $templates,
+            'token' => $token,
             'headerOptions' => [
                 [
                     "type" => "link",
@@ -125,7 +147,8 @@ class TemplateController extends Controller
                 TemplateImage::create([
                     "uni" => $uni,
                     "image" => $path,
-                    "isFrame" => $isFrame,
+                    "isFrame" => $item['isFrame'],
+                    "isText" => $item['isText'],
                     "coordinates" => $isFrame == 1 ? ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"] : "",
                     "template_id" => $template->id,
                     // "image" => $name,
@@ -139,9 +162,8 @@ class TemplateController extends Controller
 
         try {
             $template = Template::create([
-                // "title" => $request->title,
+                "title" => $request->title,
                 // "tags" => $request->tags,
-                "title" => "text title " . random_int(1, 100),
                 "tags" => "tagsss gsss " . random_int(1, 100),
                 // "user_id" => Auth::user()->id,//
                 "user_id" => $request->user_id,
