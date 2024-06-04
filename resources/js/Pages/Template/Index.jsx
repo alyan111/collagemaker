@@ -5,16 +5,30 @@ import ActionBar from '@/Components/ActionBar';
 import { Stack } from '@mui/material';
 import AssetImage from '@/Components/AssetImage';
 import Card from '@mui/material/Card';
-export default function Create({ auth, type, templates, title, headerOptions, apiToken }) {
-
-    React.useEffect(() => {
-        localStorage.setItem('apiToken', apiToken);
-    }, [])
+import axios from 'axios';
+export default function Create({ auth, templates, title, headerOptions, token }) {
 
     const actions = {
         "Create": function () {
             handleSubmit();
         },
+    };
+
+    const handleRemoveFileInput = (uni) => {
+
+
+        axios.delete(route("delete.template", { uni }), {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     };
 
     return (
@@ -29,7 +43,7 @@ export default function Create({ auth, type, templates, title, headerOptions, ap
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8" style={{ position: "relative", width: "100%" }}>
                         <Stack direction={'row'} flexWrap={'wrap'} justifyContent={'center'}>
                             {templates.map((template, index) => (
-                                <AssetImage src={template['thumbnail']} key={index} title={template['title']} />
+                                <AssetImage src={template['thumbnail']} key={index} uni={template['uni']} title={template['title']} handleRemoveFileInput={handleRemoveFileInput} />
                             ))}
                         </Stack>
                     </div>

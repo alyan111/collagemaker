@@ -21,6 +21,8 @@ Route::get('/file', [SingleImageDataController::class, 'downloadTest'])->name("d
 
 Route::middleware('auth:sanctum')->post('/templates', [TemplateController::class, 'store'])->name("save.template");
 
+Route::middleware('auth:sanctum')->delete('/templates/{uni}', [TemplateController::class, 'delete'])->name("delete.template");
+
 Route::post('/assets/create', [SingleImageDataController::class, 'store'])->name("save.single.asset");
 
 Route::middleware('auth:sanctum')->put('/templates/image/{uni}', [TemplateController::class, 'updateImage'])->name("update.template.image");

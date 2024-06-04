@@ -15,6 +15,7 @@ use Inertia\Inertia;
 
 class TemplateController extends Controller
 {
+
     function delete(Request $request, $uni)
     {
         $template = Template::where("uni", $uni)->first();
@@ -34,15 +35,13 @@ class TemplateController extends Controller
         }
         return response()->json(["message" => $deletedImages]);
     }
+
     function index(Request $request)
     {
-        $user = Auth::user();
-        $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
         $templates = TemplateResource::collection(Template::orderBy('id', 'desc')->get())->toArray($request);
         return Inertia::render('Template/Index', [
             'title' => "Manage Templates",
             'templates' => $templates,
-            'token' => $token,
             'headerOptions' => [
                 [
                     "type" => "link",
@@ -84,6 +83,7 @@ class TemplateController extends Controller
                 'name' => Category::where("uni", $categoryUni)->first()['name'],
                 'templates' => TemplateResource::collection($templates)->toArray($request)
             ];
+
         }
         return response()->json(['templates' => $response]);
     }
