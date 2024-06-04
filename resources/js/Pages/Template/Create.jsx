@@ -17,12 +17,13 @@ export default function Create({ auth, type, title, headerOptions, categories, a
     }, [])
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fileInputs, setFileInputs] = useState([]); // Start with one file input
+    // console.log(fileInputs);
     const [info, setInfo] = useState({
         'title': "",
         'tags': "",
         'height': "",
         'width': "",
-    })
+    });
 
     const handleInputChange = (type, value) => {
         setInfo((prevInfo) => ({
@@ -31,28 +32,52 @@ export default function Create({ auth, type, title, headerOptions, categories, a
         }));
     }
 
-    const handleFileChange = (index, event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const newSelectedFiles = [...selectedFiles];
-            newSelectedFiles[index] = {
-                id: file.name,  // Or any other ID you have
-                src: URL.createObjectURL(file),
-                x: 0,           // Placeholder for x coordinate
-                y: 0,           // Placeholder for y coordinate
-                rotation: 0,    // Placeholder for rotation
-                image: file,
-                isFrame: false  // Default to false
-            };
-            setSelectedFiles(newSelectedFiles);
+    const handleFileChange = (index, event, isText = false) => {
+        if (isText) {
+            // console.log("Text value at index", index, "is", event.target.value);
+        } else {
+            const file = event.target.files[0];
+            if (file) {
+                const newSelectedFiles = [...fileInputs];
+                newSelectedFiles[index] = {
+                    id: file.name,  // Or any other ID you have
+                    src: URL.createObjectURL(file),
+                    x: 0,           // Placeholder for x coordinate
+                    y: 0,           // Placeholder for y coordinate
+                    rotation: 0,    // Placeholder for rotation
+                    image: file,
+                    isFrame: false,  // Default to false
+                    isText: false,   // Default to false
+                    text: false  // Default to false
+                };
+                setFileInputs(newSelectedFiles);
+            }
         }
     };
 
-    const handleCheckboxChange = (index, event) => {
-        const newSelectedFiles = [...selectedFiles];
-        if (newSelectedFiles[index]) {
-            newSelectedFiles[index].isFrame = event.target.checked;
-            setSelectedFiles(newSelectedFiles);
+    const handleCheckboxChange = (index, event, type) => {
+        const newSelectedFiles = [...fileInputs];
+        if (type == "text") {
+            if (newSelectedFiles[index]) {
+                newSelectedFiles[index] = {
+                    id: fileInputs.length + 1,  // Or any other ID you have
+                    src: null,
+                    x: 0,           // Placeholder for x coordinate
+                    y: 0,           // Placeholder for y coordinate
+                    rotation: 0,    // Placeholder for rotation
+                    image: null,
+                    isFrame: false,  // Default to false
+                    isText: event.target.checked
+                }
+                setFileInputs(newSelectedFiles);
+            }
+
+        } else if (type == "frame") {
+            if (newSelectedFiles[index]) {
+                newSelectedFiles[index].isFrame = event.target.checked;
+                setFileInputs(newSelectedFiles);
+            }
+
         }
     };
 
@@ -64,7 +89,18 @@ export default function Create({ auth, type, title, headerOptions, categories, a
     };
 
     const handleAddFileInput = () => {
-        setFileInputs([...fileInputs, fileInputs.length]);
+
+        setFileInputs([...fileInputs, {
+            id: fileInputs.length + 1,  // Or any other ID you have
+            src: null,
+            x: 0,           // Placeholder for x coordinate
+            y: 0,           // Placeholder for y coordinate
+            rotation: 0,    // Placeholder for rotation
+            image: null,
+            isFrame: false,  // Default to false
+            isText: false  // Default to false
+        }]);
+        // setFileInputs([...fileInputs, fileInputs.length]);
     };
 
     const handleSubmit = useCallback(() => {
@@ -77,6 +113,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
             formData.append(`items[${index}][rotation]`, item.rotation);
             formData.append(`items[${index}][image]`, item.image);
             formData.append(`items[${index}][isFrame]`, item.isFrame ? '1' : '0');
+            formData.append(`items[${index}][isText]`, item.isText ? '1' : '0');
         });
         formData.append('user_id', auth.user.id);
         formData.append('title', info['title']);
@@ -157,7 +194,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
                                     handleFileChange={handleFileChange}
                                     handleRemoveFileInput={handleRemoveFileInput}
                                     handleCheckboxChange={handleCheckboxChange}
-                                    selectedFile={selectedFiles[index]}
+                                    selectedFile={fileInputs[index]}
                                     type={index > 1 ? "image" : index == 0 ? "thumbnail" : "shade"}
                                 />
                             ))}

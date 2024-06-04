@@ -146,7 +146,8 @@ class TemplateController extends Controller
                 TemplateImage::create([
                     "uni" => $uni,
                     "image" => $path,
-                    "isFrame" => $isFrame,
+                    "isFrame" => $item['isFrame'],
+                    "isText" => $item['isText'],
                     "coordinates" => $isFrame == 1 ? ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"] : "",
                     "template_id" => $template->id,
                     // "image" => $name,
@@ -160,9 +161,8 @@ class TemplateController extends Controller
 
         try {
             $template = Template::create([
-                // "title" => $request->title,
+                "title" => $request->title,
                 // "tags" => $request->tags,
-                "title" => "text title " . random_int(1, 100),
                 "tags" => "tagsss gsss " . random_int(1, 100),
                 // "user_id" => Auth::user()->id,//
                 "user_id" => $request->user_id,

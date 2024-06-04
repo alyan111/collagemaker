@@ -11,7 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('template_images', function (Blueprint $table) {
-            $table->text("imageText")->default("temp");
+            $table->integer("isText")->default(0);
+
         });
     }
 
@@ -21,7 +22,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('template_images', function (Blueprint $table) {
-            $table->dropColumn("imageText");
+            $table->dropColumn("isText");
         });
     }
 };
