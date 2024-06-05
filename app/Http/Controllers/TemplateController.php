@@ -15,12 +15,32 @@ use Inertia\Inertia;
 
 class TemplateController extends Controller
 {
+    function delete(Request $request, $uni)
+    {
+        $template = Template::where("uni", $uni)->first();
+        if (Storage::disk('public')->exists($template['thumbnail']))
+            Storage::disk('public')->delete($template['thumbnail']);
+        if (Storage::disk('public')->exists($template['white_image']))
+            Storage::disk('public')->delete($template['white_image']);
+        $templateImages = TemplateImage::where("template_id", $template->id)->get();
+        foreach ($templateImages as $key => $img) {
+            $filename = $img['image'];
+            if (Storage::disk('public')->exists($filename))
+                Storage::disk('public')->delete($filename);
+            $img->delete();
+        }
+        $template->delete();
+        return response()->json(["message" => "Template deleted"]);
+    }
     function index(Request $request)
     {
+        $user = Auth::user();
+        $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
         $templates = TemplateResource::collection(Template::orderBy('id', 'desc')->get())->toArray($request);
         return Inertia::render('Template/Index', [
             'title' => "Manage Templates",
             'templates' => $templates,
+            'token' => $token,
             'headerOptions' => [
                 [
                     "type" => "link",
@@ -117,19 +137,26 @@ class TemplateController extends Controller
                 // $x = $item['x'];
                 // $y = $item['y'];
                 // $rotation = $item['rotation'];
+
                 $image = $item['image'];
                 $uni = Str::uuid();
                 $name = $uni . round(microtime(true)) . random_int(1, 999) . '.' . $image->extension();
                 $path = Storage::disk("public")->putFileAs("/templates", $image, $name);
                 $isFrame = $item['isFrame'];
-                TemplateImage::create([
+                $data = [
                     "uni" => $uni,
                     "image" => $path,
                     "isFrame" => $isFrame,
+                    "isTop" => $item['isTop'],
+                    "isText" => $item['isText'],
                     "coordinates" => $isFrame == 1 ? ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"] : "",
                     "template_id" => $template->id,
                     // "image" => $name,
-                ]);
+                ];
+                if ($item['isText']) {
+                    $data['imageText'] = $item['text'];
+                }
+                TemplateImage::create($data);
             }
             return response()->json([
                 'template' => "message"
@@ -183,7 +210,6 @@ class TemplateController extends Controller
                     "images" => $templateImages,
                 ]
             ]);
-
         } catch (\Throwable $th) {
             throw $th;
         }

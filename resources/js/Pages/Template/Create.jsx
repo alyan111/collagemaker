@@ -42,16 +42,30 @@ export default function Create({ auth, type, title, headerOptions, categories, a
                 y: 0,           // Placeholder for y coordinate
                 rotation: 0,    // Placeholder for rotation
                 image: file,
-                isFrame: false  // Default to false
+                isFrame: false,   // Default to false
+                isText: false,  // Default to false
+                isTop: false,  // Default to false
+                text: false  // Default to false
             };
             setSelectedFiles(newSelectedFiles);
         }
     };
 
-    const handleCheckboxChange = (index, event) => {
+    const handleTextChange = (index, event) => {
+        const newSelectedFiles = [...selectedFiles];
+        newSelectedFiles[index].text = event.target.value;
+        setSelectedFiles(newSelectedFiles);
+    };
+
+    const handleCheckboxChange = (index, event, type) => {
         const newSelectedFiles = [...selectedFiles];
         if (newSelectedFiles[index]) {
-            newSelectedFiles[index].isFrame = event.target.checked;
+            if (type === "frame")
+                newSelectedFiles[index].isFrame = event.target.checked;
+            if (type === "text")
+                newSelectedFiles[index].isText = event.target.checked;
+            if (type === "isTop")
+                newSelectedFiles[index].isTop = event.target.checked;
             setSelectedFiles(newSelectedFiles);
         }
     };
@@ -77,6 +91,9 @@ export default function Create({ auth, type, title, headerOptions, categories, a
             formData.append(`items[${index}][rotation]`, item.rotation);
             formData.append(`items[${index}][image]`, item.image);
             formData.append(`items[${index}][isFrame]`, item.isFrame ? '1' : '0');
+            formData.append(`items[${index}][isText]`, item.isText ? '1' : '0');
+            formData.append(`items[${index}][text]`, item.text);
+            formData.append(`items[${index}][isTop]`, item.isTop ? '1' : '0');
         });
         formData.append('user_id', auth.user.id);
         formData.append('title', info['title']);
@@ -157,6 +174,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
                                     handleFileChange={handleFileChange}
                                     handleRemoveFileInput={handleRemoveFileInput}
                                     handleCheckboxChange={handleCheckboxChange}
+                                    handleTextChange={handleTextChange}
                                     selectedFile={selectedFiles[index]}
                                     type={index > 1 ? "image" : index == 0 ? "thumbnail" : "shade"}
                                 />
