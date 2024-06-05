@@ -20,6 +20,7 @@ class TemplateResource extends JsonResource
             'title' => $this->title,
             'category' => $this->category->name,
             'height' => $this->height,
+            'frameCount' => (int) $this->frameCount,
             'width' => $this->width,
             'thumbnail' => asset(Storage::url($this->thumbnail)),
             'whiteImage' => asset(Storage::url($this->white_image)),

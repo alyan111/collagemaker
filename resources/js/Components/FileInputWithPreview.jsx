@@ -5,7 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function FileInputWithPreview({ index, handleFileChange, handleCheckboxChange, handleRemoveFileInput, selectedFile, type, handleTextChange }) {
+export default function FileInputWithPreview({ index,
+  handleFileChange,
+  handleCheckboxChange,
+  handleRemoveFileInput,
+  selectedFile,
+  type,
+  handleTextChange }) {
   let showText = true;
   try {
     showText = selectedFile.src && false;
@@ -71,7 +77,7 @@ export default function FileInputWithPreview({ index, handleFileChange, handleCh
               />
               <label htmlFor={`isFrame-${index}`} className="ml-2">Frame</label>
             </Box>
-            {/* <Box>
+            <Box>
               <input
                 type="checkbox"
                 id={`isText-${index}`}
@@ -79,7 +85,7 @@ export default function FileInputWithPreview({ index, handleFileChange, handleCh
                 onChange={(event) => handleCheckboxChange(index, event, "text")}
               />
               <label htmlFor={`isText-${index}`} className="ml-2">Text</label>
-            </Box> */}
+            </Box>
             <Box>
               <input
                 type="checkbox"

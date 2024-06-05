@@ -82,7 +82,6 @@ class TemplateController extends Controller
                 'name' => Category::where("uni", $categoryUni)->first()['name'],
                 'templates' => TemplateResource::collection($templates)->toArray($request)
             ];
-
         }
         return response()->json(['templates' => $response]);
     }
@@ -98,13 +97,13 @@ class TemplateController extends Controller
         $templateImage->update($request->all());
         return response()->json(['message' => "Updated"]);
     }
-
     function store(Request $request)
     {
         $templateData = [];
         if ($request->input('source') === 'panel') {
             $templateUni = Str::uuid();
             $templateData = [
+                "frameCount" => $request->frameCount,
                 "title" => $request->title,
                 "tags" => $request->tags ? $request->tags : "-",
                 "height" => $request->height ? $request->height : "720",

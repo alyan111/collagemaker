@@ -83,7 +83,10 @@ export default function Create({ auth, type, title, headerOptions, categories, a
 
     const handleSubmit = useCallback(() => {
         const formData = new FormData();
+        let frameCount = 0;
         selectedFiles.forEach((item, index) => {
+            if (item.isFrame)
+                frameCount++;
             formData.append(`items[${index}][id]`, item.id);
             formData.append(`items[${index}][src]`, item.src);
             formData.append(`items[${index}][x]`, item.x);
@@ -101,6 +104,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
         formData.append('height', info['height']);
         formData.append('width', info['width']);
         formData.append('source', "panel");
+        formData.append('frameCount', frameCount);
         formData.append('category_id', selectedCategory['id']);
         const apiToken = localStorage.getItem('apiToken');
         axios.post(route('save.template'), formData, {

@@ -23,6 +23,7 @@ class Template extends Model
         'category_id',
         'thumbnail',
         'user_id',
+        'frameCount',
     ];
 
     public function images()
