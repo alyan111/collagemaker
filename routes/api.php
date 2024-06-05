@@ -31,6 +31,8 @@ Route::get('/templates/{uni}', [TemplateController::class, 'read'])->name("get.t
 
 Route::get('/templates', [TemplateController::class, 'readAll'])->name("get.all.template");
 
+Route::get('/templates/update/frameCount', [TemplateController::class, 'updateFrameCount'])->name("get.all.template");
+
 Route::post('/category', [CategoryController::class, 'manage'])->name("manage.category");
 
 Route::patch('/category/status', [CategoryController::class, 'toggle'])->name("toggle.category");
