@@ -94,12 +94,23 @@ class TemplateController extends Controller
     }
     function updateImage(Request $request, $uni)
     {
-        $templateImage = TemplateImage::where("uni", $uni)->get()[0];
-        $templateImage->x_axis = $request->x_axis;
-        $templateImage->y_axis = $request->y_axis;
-        $templateImage->coordinates = $request->coordinates;
-        $templateImage->imageText = $request->imageText;
-        $templateImage->save();
+        try {
+            //code...
+            $templateImage = TemplateImage::where("uni", $uni)->get()[0];
+            $templateImage->x_axis = $request->x_axis;
+            $templateImage->y_axis = $request->y_axis;
+            $templateImage->coordinates = $request->coordinates;
+            if (isset($request->isText)) {
+                $templateImage->isText = $request->isText;
+                $templateImage->imageText = $request->imageText;
+            }
+            if (isset($request->isTop)) {
+                $templateImage->isTop = $request->isTop;
+            }
+            $templateImage->save();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
         return response()->json(['message' => "Updated"]);
     }
 
