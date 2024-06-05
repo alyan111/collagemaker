@@ -16,19 +16,16 @@ use Inertia\Inertia;
 class TemplateController extends Controller
 {
 
-    function updateFrameCount(Request $request)
-    {
-        $templates = Template::all();
-
-        foreach ($templates as $key => $template) {
-            $numberOfFrames = TemplateImage::where("template_id", $template->id)
-                ->where("isFrame", 1)->count();
-            $template->frameCount = $numberOfFrames;
-            $template->save();
-        }
-
-        // return response()->json(["message" => $deletedImages]);
-    }
+    // function updateFrameCount(Request $request)
+    // {
+    //     $templates = Template::all();
+    //     foreach ($templates as $key => $template) {
+    //         $numberOfFrames = TemplateImage::where("template_id", $template->id)
+    //             ->where("isFrame", 1)->count();
+    //         $template->frameCount = $numberOfFrames;
+    //         $template->save();
+    //     }
+    // }
 
     function delete(Request $request, $uni)
     {
