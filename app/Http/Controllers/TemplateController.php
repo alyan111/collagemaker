@@ -27,6 +27,11 @@ class TemplateController extends Controller
     //     }
     // }
 
+    function updateFrameCount(Request $request)
+    {
+        $templates = Template::all();
+    }
+
     function delete(Request $request, $uni)
     {
         $template = Template::where("uni", $uni)->first();
