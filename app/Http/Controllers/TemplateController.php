@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class TemplateController extends Controller
 {
@@ -92,6 +93,10 @@ class TemplateController extends Controller
     }
     function readAll(Request $request)
     {
+
+        // $response = Cache::get('allTemplates');
+        // if ($response === null) {
+        $response = [];
         foreach (Category::with(['templates' => function ($query) {
             $query->take(5);
         }
@@ -101,10 +106,11 @@ class TemplateController extends Controller
                 'templates' => TemplateResource::collection($category['templates'])->toArray($request)
             ];
         }
+        // Cache::put('allTemplates', $response, 1440);
+        // }
         return response()->json(['templates' => $response]);
 
-        // // old
-        // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
+        // // initial
         $response = [];
         foreach (Template::all()->groupBy('category_id') as $categoryUni => $templates) {
             $response[] = [
