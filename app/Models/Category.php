@@ -16,4 +16,9 @@ class Category extends Model
         'order',
         'thumbnail',
     ];
+
+    public function templates()
+    {
+        return $this->hasMany(Template::class, 'category_id', 'uni');
+    }
 }

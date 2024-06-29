@@ -92,6 +92,18 @@ class TemplateController extends Controller
     }
     function readAll(Request $request)
     {
+        foreach (Category::with(['templates' => function ($query) {
+            $query->take(5);
+        }
+        ])->get() as $category) {
+            $response[] = [
+                'name' => $category['name'],
+                'templates' => TemplateResource::collection($category['templates'])->toArray($request)
+            ];
+        }
+        return response()->json(['templates' => $response]);
+
+        // // old
         // $templates = TemplateResource::collection(Template::all()->groupBy('category_id'))->toArray($request);
         $response = [];
         foreach (Template::all()->groupBy('category_id') as $categoryUni => $templates) {
