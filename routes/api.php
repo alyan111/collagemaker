@@ -36,3 +36,7 @@ Route::get('/templates/update/frameCount', [TemplateController::class, 'updateFr
 Route::post('/category', [CategoryController::class, 'manage'])->name("manage.category");
 
 Route::patch('/category/status', [CategoryController::class, 'toggle'])->name("toggle.category");
+
+require __DIR__ . '/auth.php';
+
+require __DIR__ . '/v2.api.php';

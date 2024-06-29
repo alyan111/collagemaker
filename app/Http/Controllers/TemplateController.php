@@ -108,16 +108,14 @@ class TemplateController extends Controller
         }
         // Cache::put('allTemplates', $response, 1440);
         // }
-        return response()->json(['templates' => $response]);
 
         // // initial
-        $response = [];
-        foreach (Template::all()->groupBy('category_id') as $categoryUni => $templates) {
-            $response[] = [
-                'name' => Category::where("uni", $categoryUni)->first()['name'],
-                'templates' => TemplateResource::collection($templates)->toArray($request)
-            ];
-        }
+        // foreach (Template::all()->groupBy('category_id') as $categoryUni => $templates) {
+        //     $response[] = [
+        //         'name' => Category::where("uni", $categoryUni)->first()['name'],
+        //         'templates' => TemplateResource::collection($templates)->toArray($request)
+        //     ];
+        // }
         return response()->json(['templates' => $response]);
     }
     function read(Request $request, $uni)
