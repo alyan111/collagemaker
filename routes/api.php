@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Redis;
 
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+
 Route::get('/user', function (Request $request) {
     try {
         Redis::set('test_key', 'Hello, Redis from Laravel!');
@@ -20,8 +24,7 @@ Route::get('/user', function (Request $request) {
         echo "Error: " . $e->getMessage();
     }
     return "";
-    return $request->user();
-})->middleware('auth:sanctum');
+});
 
 Route::get('/assets/{type}', [SingleImageDataController::class, 'getSingleImageContent'])->name("serve.assets");
 
