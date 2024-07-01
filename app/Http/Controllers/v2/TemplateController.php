@@ -37,6 +37,7 @@ class TemplateController extends Controller
         $cacheKey = "templates_with_categories_page_{$request->page}";
         $cachedResponse = Redis::get($cacheKey);
         if ($cachedResponse)
+            return "returning from cache";
             return response()->json(json_decode($cachedResponse, true));
         $response = [];
         foreach (Category::with(['templates' => function ($query) {
