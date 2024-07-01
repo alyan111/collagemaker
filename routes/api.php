@@ -7,7 +7,19 @@ use App\Http\Controllers\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Redis;
+
 Route::get('/user', function (Request $request) {
+    try {
+        Redis::set('test_key', 'Hello, Redis from Laravel!');
+        $value = Redis::get('test_key');
+        echo "Retrieved value from Redis: $value <br>";
+        Redis::del('test_key');
+        echo "Test key deleted successfully.";
+    } catch (\Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    return "";
     return $request->user();
 })->middleware('auth:sanctum');
 
