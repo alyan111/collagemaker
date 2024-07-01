@@ -12,7 +12,7 @@ class TemplateController extends Controller
     function getTemplatesFronASingleCategory(Request $request, $category_name)
     {
         return response()->json([
-            'category' => $category_name,
+            'name' => $category_name,
             'templates' => TemplateResource::collection(Category::where('name', $category_name)
                 ->get()[0]->templates()->paginate(12))->toArray($request)
         ]);
