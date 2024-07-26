@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Redis;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
+Route::get('/test', function (Request $request) {
+  return "templates_with_categories_page_{$request->page}";
+});
+
 Route::get('/assets/{type}', [SingleImageDataController::class, 'getSingleImageContent'])->name("serve.assets");
 
 Route::post('/save', [SingleImageDataController::class, 'testSave'])->name("test.save");
