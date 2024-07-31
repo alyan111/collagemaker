@@ -24,6 +24,7 @@ class TemplateImageResource extends JsonResource
             'isFrame' => (int) $this->isFrame,
             'isText' => $this->isText,
             'isTop' => $this->isTop,
+            'isSquare' => $this->isSquare,
             'coordinates' => $this->coordinates ? $this->coordinates : ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"],
         ];
         return $response;

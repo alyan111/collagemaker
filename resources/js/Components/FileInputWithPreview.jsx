@@ -95,6 +95,15 @@ export default function FileInputWithPreview({ index,
               />
               <label htmlFor={`isTop-${index}`} className="ml-2">Top</label>
             </Box>
+            <Box>
+              <input
+                type="checkbox"
+                id={`isSquare-${index}`}
+                checked={selectedFile.isSquare}
+                onChange={(event) => handleCheckboxChange(index, event, "isSquare")}
+              />
+              <label htmlFor={`isSquare-${index}`} className="ml-2">Square</label>
+            </Box>
           </Stack>
         </div>
       )}
