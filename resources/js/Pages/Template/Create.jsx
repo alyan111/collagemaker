@@ -46,7 +46,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
                 isText: false,  // Default to false
                 isTop: false,  // Default to false
                 text: false,  // Default to false
-                isSquare: false  // Default to false
+                shapeType: ""  // Default to false
             };
             setSelectedFiles(newSelectedFiles);
         }
@@ -67,8 +67,8 @@ export default function Create({ auth, type, title, headerOptions, categories, a
                 newSelectedFiles[index].isText = event.target.checked;
             if (type === "isTop")
                 newSelectedFiles[index].isTop = event.target.checked;
-            if (type === "isSquare")
-                newSelectedFiles[index].isSquare = event.target.checked;
+            if (type === "shapeType")
+                newSelectedFiles[index].shapeType = event.target.value;
             setSelectedFiles(newSelectedFiles);
         }
     };
@@ -90,6 +90,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
         selectedFiles.forEach((item, index) => {
             if (item.isFrame)
                 frameCount++;
+            console.log(item.shapeType);
             formData.append(`items[${index}][id]`, item.id);
             formData.append(`items[${index}][src]`, item.src);
             formData.append(`items[${index}][x]`, item.x);
@@ -100,7 +101,7 @@ export default function Create({ auth, type, title, headerOptions, categories, a
             formData.append(`items[${index}][isText]`, item.isText ? '1' : '0');
             formData.append(`items[${index}][text]`, item.text);
             formData.append(`items[${index}][isTop]`, item.isTop ? '1' : '0');
-            formData.append(`items[${index}][isSquare]`, item.isSquare ? '1' : '0');
+            formData.append(`items[${index}][shapeType]`, item.shapeType || 0);
         });
         formData.append('user_id', auth.user.id);
         formData.append('title', info['title']);

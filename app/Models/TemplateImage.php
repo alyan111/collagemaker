@@ -23,7 +23,7 @@ class TemplateImage extends Model
         "coordinates",
         "imageText",
         "isTop",
-        "isSquare",
+        "shapeType",
         "template_id",
     ];
 

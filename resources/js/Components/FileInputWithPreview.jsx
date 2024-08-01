@@ -5,6 +5,12 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
 export default function FileInputWithPreview({ index,
   handleFileChange,
   handleCheckboxChange,
@@ -65,8 +71,8 @@ export default function FileInputWithPreview({ index,
 
           <Stack sx={{
             position: "absolute",
-            top: "10px", left: "10px", margin: "7px", borderRadius: "12px",
-            padding: "10px 20px ", backgroundColor: "rgba(0,0,0,0.5)", color: "white"
+            top: "10px", left: "10px", margin: "7px", borderRadius: "12px", width: "200px",
+            padding: "10px 20px ", backgroundColor: "#fff", color: "black"
           }} spacing={1}>
             <Box>
               <input
@@ -95,15 +101,19 @@ export default function FileInputWithPreview({ index,
               />
               <label htmlFor={`isTop-${index}`} className="ml-2">Top</label>
             </Box>
-            <Box>
-              <input
-                type="checkbox"
-                id={`isSquare-${index}`}
-                checked={selectedFile.isSquare}
-                onChange={(event) => handleCheckboxChange(index, event, "isSquare")}
-              />
-              <label htmlFor={`isSquare-${index}`} className="ml-2">Square</label>
-            </Box>
+
+            {selectedFile.isFrame && <Select
+              value={selectedFile.shapeType}
+              label="Shape Type"
+              id={`shapeType-${index}`}
+              labelId={`shapeType-${index}`}
+              onChange={(event) => handleCheckboxChange(index, event, "shapeType")}
+            >
+              <MenuItem value={"circle"}>Circle</MenuItem>
+              <MenuItem value={"square"}>Square</MenuItem>
+              <MenuItem value={"other"}>Other</MenuItem>
+            </Select>}
+
           </Stack>
         </div>
       )}

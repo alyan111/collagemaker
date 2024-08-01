@@ -2,6 +2,8 @@ import { Box, Card, Typography } from '@mui/material'
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import NavLink from '@/Components/NavLink';
 
 const AssetImage = ({ src, title, uni, index, handleRemoveFileInput }) => {
   return (
@@ -19,11 +21,16 @@ const AssetImage = ({ src, title, uni, index, handleRemoveFileInput }) => {
       <Box sx={{
         position: "absolute",
         top: "10px", right: "10px",
+        display: "flex",
+        flexDirection: "column"
         // backgroundColor: "blue"
       }}>
         <IconButton onClick={() => handleRemoveFileInput(uni)} aria-label="delete">
           <DeleteIcon color='warning' />
         </IconButton>
+        <NavLink href={route('categories.view')}>
+          <IconButton><EditIcon color='primary' /></IconButton>
+        </NavLink>
       </Box>
     </Card>
   )

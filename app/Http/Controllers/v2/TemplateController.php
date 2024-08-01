@@ -54,6 +54,7 @@ class TemplateController extends Controller
         foreach (Category::with(['templates' => function ($query) {
             $query->take(5);
         }
+
         ])->paginate(10) as $category)
             $response[] = [
                 'name' => $category['name'],
@@ -62,3 +63,5 @@ class TemplateController extends Controller
         return response()->json(['templates' => $response]);
     }
 }
+
+

@@ -176,7 +176,7 @@ class TemplateController extends Controller
                     "image" => $path,
                     "isFrame" => $isFrame,
                     "isTop" => $item['isTop'],
-                    "isSquare" => $item['isSquare'],
+                    "shapeType" => $item['shapeType'],
                     "isText" => $item['isText'],
                     "coordinates" => $isFrame == 1 ? ['bottom' => "0", "top" => "0", "left" => "0", "right" => "0"] : "",
                     "template_id" => $template->id,
