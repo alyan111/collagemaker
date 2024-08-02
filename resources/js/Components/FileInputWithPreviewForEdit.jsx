@@ -22,7 +22,7 @@ export default function FileInputWithPreview({ index, image, uni }) {
     let inp = event.target.value;
     setShapeType(inp);
     const formData = new FormData();
-    formData.append("shapeType", shapeType);
+    formData.append("shapeType", inp);
     const apiToken = localStorage.getItem('apiToken');
     axios.post(route('update.template.image', { uni }), formData, {
       headers: {
