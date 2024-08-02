@@ -142,12 +142,13 @@ export default function FileInputWithPreview({ index, image, uni }) {
           </Box>
         }
 
-        {(typeof image !== 'string' && image['shapeType'] != 0) && <Stack sx={{
+        {/* {(image.isFrame && image['shapeType'] != 0) && <Stack sx={{ */}
+        {image.isFrame && <Stack sx={{
           position: "absolute",
           top: "10px", left: "10px", margin: "7px", borderRadius: "12px", width: "200px",
           padding: "10px 20px ", backgroundColor: "#fff", color: "black"
         }} spacing={1}>
-          {image.isFrame && <Select
+          <Select
             value={shapeType}
             label="Shape Type"
             id={`shapeType-${index}`}
@@ -157,7 +158,7 @@ export default function FileInputWithPreview({ index, image, uni }) {
             <MenuItem value={"circle"}>Circle</MenuItem>
             <MenuItem value={"square"}>Square</MenuItem>
             <MenuItem value={"other"}>Other</MenuItem>
-          </Select>}
+          </Select>
         </Stack>}
       </div>
 
