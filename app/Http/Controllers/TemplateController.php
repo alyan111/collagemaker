@@ -68,6 +68,24 @@ class TemplateController extends Controller
             ],
         ]);
     }
+    function edit(Request $request, string $uni)
+    {
+        $template = new TemplateResource(Template::where("uni", $uni)->get()[0]);
+        $user = Auth::user();
+        $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
+        return Inertia::render('Template/Edit', [
+            'title' => "Update Template",
+            'template' => $template,
+            'apiToken' => $token,
+            'headerOptions' => [
+                [
+                    "type" => "action",
+                    "title" => "Update",
+                    "href" => "single.image.create.view",
+                ],
+            ],
+        ]);
+    }
     function create(Request $request)
     {
         $user = Auth::user();
@@ -126,6 +144,30 @@ class TemplateController extends Controller
     }
     function updateImage(Request $request, $uni)
     {
+
+        if ($request->hasFile('image') && $request->purpose === 'updateImage') {
+            if ($request->type === 'image') {
+                $target = TemplateImage::where("uni", $uni)->first();
+            } else {
+                $target = Template::where("uni", $uni)->first();
+            }
+            $newExtension = $request->image->getClientOriginalExtension();
+            $previouseImage = asset(Storage::url($target->image));
+            $previouseName = pathinfo($target->image, PATHINFO_FILENAME);
+            $newFileName = $previouseName . "." . $newExtension;
+            $path = Storage::disk("public")->putFileAs("/templates", $request->image, $newFileName);
+            if ($request->type === 'image')
+                $target->image = $path;
+            if ($request->type === 'thumbnail')
+                $target->thumbnail = $path;
+            if ($request->type === 'shade')
+                $target->white_image = $path;
+            $target->save();
+            if (Storage::exists($previouseImage)) {
+                Storage::delete($previouseImage);
+            }
+            return ['message' => ucfirst($request->type) . " has been updated"];
+        }
         $templateImage = TemplateImage::where("uni", $uni)->get()[0];
         $templateImage->update($request->all());
         return response()->json(['message' => "Updated"]);

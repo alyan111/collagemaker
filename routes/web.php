@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/templates/new', [TemplateController::class, 'create'])->name('create.new.template.view');
 
+    Route::get('/templates/{uni}', [TemplateController::class, 'edit'])->name('view.edit.template');
+
     Route::get('/assets/create', [SingleImageDataController::class, 'assetsCreate'])->name('assets.create.view');
 
     Route::get('/assets', [SingleImageDataController::class, 'index'])->name('view.all.assets');

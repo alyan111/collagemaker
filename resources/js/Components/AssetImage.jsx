@@ -28,7 +28,7 @@ const AssetImage = ({ src, title, uni, index, handleRemoveFileInput }) => {
         <IconButton onClick={() => handleRemoveFileInput(uni)} aria-label="delete">
           <DeleteIcon color='warning' />
         </IconButton>
-        <NavLink href={route('categories.view')}>
+        <NavLink href={route('view.edit.template', { uni })}>
           <IconButton><EditIcon color='primary' /></IconButton>
         </NavLink>
       </Box>

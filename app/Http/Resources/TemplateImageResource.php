@@ -12,8 +12,8 @@ class TemplateImageResource extends JsonResource
     {
         $response = [
             'uni' => $this->uni,
-            // 'image' => asset('storage/templates/' . $this->image),
-            'image' => $this->isFrame == 1 ? "https://collagemaker.rosyappsstudio.com/temp.png" :  asset(Storage::url($this->image)),
+            'image' => asset(Storage::url($this->image)),
+            // 'image' => $this->isFrame == 1 ? "https://collagemaker.rosyappsstudio.com/temp.png" : asset(Storage::url($this->image)),
             'width' => $this->width,
             'image_text' => $this->imageText,
             'height' => $this->height,

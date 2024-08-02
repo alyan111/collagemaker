@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->delete('/templates/{uni}', [TemplateControlle
 
 Route::post('/assets/create', [SingleImageDataController::class, 'store'])->name("save.single.asset");
 
-Route::middleware('auth:sanctum')->put('/templates/image/{uni}', [TemplateController::class, 'updateImage'])->name("update.template.image");
+Route::middleware('auth:sanctum')->post('/templates/image/{uni}', [TemplateController::class, 'updateImage'])->name("update.template.image");
 
 Route::get('/templates/{uni}', [TemplateController::class, 'read'])->name("get.template");
 
