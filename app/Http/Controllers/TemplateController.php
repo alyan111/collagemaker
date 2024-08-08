@@ -54,7 +54,7 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
         $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
-        $templates = TemplateResource::collection(Template::orderBy('id', 'desc')->get())->toArray($request);
+        $templates = TemplateResource::collection(Template::where("category_id", "2d9791c1-c75e-42f0-8a6a-59316c24e551")->orderBy('id', 'asc')->get())->toArray($request);
         return Inertia::render('Template/Index', [
             'title' => "Manage Templates",
             'templates' => $templates,
@@ -146,14 +146,20 @@ class TemplateController extends Controller
     {
 
         if ($request->hasFile('image') && $request->purpose === 'updateImage') {
+            $target = "";
             if ($request->type === 'image') {
                 $target = TemplateImage::where("uni", $uni)->first();
+                $previouseImage = asset(Storage::url($target->image));
+                $previouseName = pathinfo($target->image, PATHINFO_FILENAME);
+                // return response()->json(['modifying' => "images", "data" => $target]);
             } else {
                 $target = Template::where("uni", $uni)->first();
+                $image = $request->type === 'thumbnail' ? $target->thumbnail : $target->white_image;
+                $previouseImage = asset(Storage::url($image));
+                $previouseName = pathinfo($image, PATHINFO_FILENAME);
+                // return response()->json(['modifying' => "template", "data" => $target]);
             }
             $newExtension = $request->image->getClientOriginalExtension();
-            $previouseImage = asset(Storage::url($target->image));
-            $previouseName = pathinfo($target->image, PATHINFO_FILENAME);
             $newFileName = $previouseName . "." . $newExtension;
             $path = Storage::disk("public")->putFileAs("/templates", $request->image, $newFileName);
             if ($request->type === 'image')

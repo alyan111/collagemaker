@@ -70,6 +70,7 @@ export default function FileInputWithPreview({ index, image, uni }) {
         }
       }).then(response => {
         openSnackbar(response.data.message, "success");
+        // console.log(response.data)
       }).catch(error => {
       });
     }
