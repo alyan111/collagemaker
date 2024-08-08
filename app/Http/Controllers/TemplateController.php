@@ -162,6 +162,9 @@ class TemplateController extends Controller
             }
             $newExtension = $request->image->getClientOriginalExtension();
             $newFileName = $previouseName . "." . $newExtension;
+            if (Storage::exists($previouseImage)) {
+                Storage::delete($previouseImage);
+            }
             $path = Storage::disk("public")->putFileAs("/templates", $request->image, $newFileName);
             if ($request->type === 'image')
                 $target->image = $path;
@@ -170,9 +173,7 @@ class TemplateController extends Controller
             if ($request->type === 'shade')
                 $target->white_image = $path;
             $target->save();
-            if (Storage::exists($previouseImage)) {
-                Storage::delete($previouseImage);
-            }
+            // deleting here
             return ['message' => ucfirst($request->type) . " has been updated"];
         }
         $templateImage = TemplateImage::where("uni", $uni)->get()[0];
