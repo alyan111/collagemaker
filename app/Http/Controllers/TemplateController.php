@@ -54,7 +54,8 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
         $token = $user->createToken(env('APP_NAME' . " Authenticatoin", "Auth Token"))->plainTextToken;
-        $templates = TemplateResource::collection(Template::where("category_id", "2d9791c1-c75e-42f0-8a6a-59316c24e551")->orderBy('id', 'asc')->get())->toArray($request);
+        // $templates = TemplateResource::collection(Template::where("category_id", "2d9791c1-c75e-42f0-8a6a-59316c24e551")->orderBy('id', 'asc')->get())->toArray($request);
+        $templates = TemplateResource::collection(Template::orderBy('id', 'desc')->get())->toArray($request);
         return Inertia::render('Template/Index', [
             'title' => "Manage Templates",
             'templates' => $templates,
