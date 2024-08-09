@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TemplateResource;
+use App\Models\Template;
 use Illuminate\Support\Facades\Redis;
 
 class TemplateController extends Controller
@@ -24,12 +25,16 @@ class TemplateController extends Controller
         // Redis::setex($cacheKey, 3600 * 24, json_encode($response)); // Cache for 1 day
         // return response()->json($response);
 
-        $response = [
+
+        if ($category_name === "All Categories")
+            $results = TemplateResource::collection(Template::orderBy('id', 'desc')->paginate(12))->toArray($request);
+        else
+            $results = TemplateResource::collection(Category::where('name', $category_name)
+                ->get()[0]->templates()->paginate(12))->toArray($request);
+        return response()->json([
             'name' => $category_name,
-            'templates' => TemplateResource::collection(Category::where('name', $category_name)
-                ->get()[0]->templates()->paginate(12))->toArray($request)
-        ];
-        return response()->json($response);
+            'templates' => $results,
+        ]);
     }
 
     function getPaginatedTemplates(Request $request)

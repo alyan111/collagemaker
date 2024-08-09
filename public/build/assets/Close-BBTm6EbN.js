@@ -1,1 +1,0 @@
-import{u as e,c as s}from"./ActionBar-DhJzRsiH.js";import{j as o}from"./app-B7Sd5JoT.js";function c(r){return e}const m=s(o.jsx("path",{d:"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}),"Close");export{m as C,c};
